@@ -1,15 +1,20 @@
-import { Geist, Geist_Mono, JetBrains_Mono } from "next/font/google"
+import { Geist, JetBrains_Mono } from "next/font/google"
 
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"
+import { MainNav } from "@/components/navigation/mainNav.component"
+import { Separator } from "@/components/ui/separator"
 
 const fontSans = Geist({
   subsets: ["latin"],
   variable: "--font-sans",
 })
 
-const jetbrainsMono = JetBrains_Mono({subsets:['latin'],variable:'--font-mono'})
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+})
 
 export default function RootLayout({
   children,
@@ -20,9 +25,16 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn("antialiased", fontSans.variable, "font-mono", jetbrainsMono.variable)}
+      className={cn(
+        "antialiased",
+        fontSans.variable,
+        "font-mono",
+        jetbrainsMono.variable
+      )}
     >
       <body>
+        <MainNav />
+        <Separator />
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
