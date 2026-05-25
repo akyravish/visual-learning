@@ -1,4 +1,6 @@
-import Link from "next/link"
+import { PageLayout } from "@/components/ui/page-layout"
+import { PageHeader } from "@/components/ui/page-header"
+import { CardLink } from "@/components/ui/card-link"
 
 const DSA_TOPICS = [
   {
@@ -15,32 +17,16 @@ const DSA_TOPICS = [
 
 export default function DsaPage() {
   return (
-    <section className="mx-auto max-w-7xl flex flex-col gap-12 px-8 py-6">
-      <div className="flex flex-col gap-3">
-        <h1 className="text-4xl font-bold tracking-tight">
-          Data Structures & Algorithms
-        </h1>
-        <p className="max-w-lg text-lg text-muted-foreground">
-          Pick a topic to start visualizing.
-        </p>
-      </div>
-
+    <PageLayout>
+      <PageHeader
+        title="Data Structures & Algorithms"
+        subtitle="Pick a topic to start visualizing."
+      />
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {DSA_TOPICS.map((topic) => (
-          <Link
-            key={topic.href}
-            href={topic.href}
-            className="group flex flex-col gap-2 rounded-xl border p-6 transition-colors hover:bg-accent"
-          >
-            <span className="text-lg font-semibold group-hover:underline">
-              {topic.title}
-            </span>
-            <span className="text-sm text-muted-foreground">
-              {topic.description}
-            </span>
-          </Link>
+          <CardLink key={topic.href} {...topic} />
         ))}
       </div>
-    </section>
+    </PageLayout>
   )
 }

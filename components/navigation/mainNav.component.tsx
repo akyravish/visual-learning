@@ -2,11 +2,6 @@
 
 import * as React from "react"
 import Link from "next/link"
-import {
-  CircleAlertIcon,
-  CircleCheckIcon,
-  CircleDashedIcon,
-} from "lucide-react"
 
 import {
   NavigationMenu,
@@ -18,7 +13,13 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 
-const DSA_TOPICS: { title: string; href: string; description: string }[] = [
+interface NavTopic {
+  title: string
+  href: string
+  description: string
+}
+
+const DSA_TOPICS: NavTopic[] = [
   {
     title: "Array",
     href: "/dsa/array",
@@ -31,16 +32,9 @@ const DSA_TOPICS: { title: string; href: string; description: string }[] = [
   },
 ]
 
-const STATUS_ITEMS = [
-  { label: "Backlog", href: "/tasks?status=backlog", icon: CircleAlertIcon },
-  { label: "To Do", href: "/tasks?status=todo", icon: CircleDashedIcon },
-  { label: "Done", href: "/tasks?status=done", icon: CircleCheckIcon },
-]
-
 export function MainNav() {
   return (
     <div className="mx-8 my-2 flex items-center justify-between">
-      {/* Logo / Home link */}
       <Link
         href="/"
         className="text-sm font-semibold tracking-tight transition-opacity hover:opacity-70"
@@ -50,7 +44,6 @@ export function MainNav() {
 
       <NavigationMenu>
         <NavigationMenuList>
-          {/* Top-level link */}
           <NavigationMenuItem>
             <NavigationMenuLink
               className={navigationMenuTriggerStyle()}
@@ -59,17 +52,13 @@ export function MainNav() {
               Home
             </NavigationMenuLink>
           </NavigationMenuItem>
-          {/* DSA */}
+
           <NavigationMenuItem>
             <NavigationMenuTrigger>DSA</NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="w-64 p-1">
                 {DSA_TOPICS.map((topic) => (
-                  <ListItem
-                    key={topic.href}
-                    href={topic.href}
-                    title={topic.title}
-                  >
+                  <ListItem key={topic.href} href={topic.href} title={topic.title}>
                     {topic.description}
                   </ListItem>
                 ))}
@@ -94,7 +83,7 @@ function ListItem({
         render={<Link href={href} />}
         className="block rounded-md px-3 py-2 text-sm transition-colors hover:bg-accent"
       >
-        <div className="mb-0.5 leading-none font-medium">{title}</div>
+        <div className="mb-0.5 font-medium leading-none">{title}</div>
         <div className="line-clamp-2 text-muted-foreground">{children}</div>
       </NavigationMenuLink>
     </li>
