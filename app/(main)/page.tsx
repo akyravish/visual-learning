@@ -10,7 +10,7 @@ const CATEGORIES = [
 
 export default function HomePage() {
   return (
-    <section className="flex flex-col gap-12">
+    <section className="mx-auto max-w-7xl flex flex-col gap-12 px-8 py-6">
       <div className="flex flex-col gap-3">
         <h1 className="text-4xl font-bold tracking-tight">Visual Learning</h1>
         <p className="max-w-lg text-lg text-muted-foreground">

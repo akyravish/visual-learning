@@ -32,10 +32,12 @@ export default function RootLayout({
         jetbrainsMono.variable
       )}
     >
-      <body>
+      <body className="flex min-h-screen flex-col">
         <MainNav />
         <Separator />
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <div className="flex flex-1 flex-col">{children}</div>
+        </ThemeProvider>
       </body>
     </html>
   )

@@ -15,7 +15,7 @@ const DSA_TOPICS = [
 
 export default function DsaPage() {
   return (
-    <section className="flex flex-col gap-12">
+    <section className="mx-auto max-w-7xl flex flex-col gap-12 px-8 py-6">
       <div className="flex flex-col gap-3">
         <h1 className="text-4xl font-bold tracking-tight">
           Data Structures & Algorithms
