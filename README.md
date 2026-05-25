@@ -1,11 +1,12 @@
 # Visual Learning
 
-An interactive DSA (Data Structures & Algorithms) visualization app built with Next.js. Step through algorithms visually to build intuition.
+An interactive DSA (Data Structures & Algorithms) visualization app built with Next.js. Each algorithm gets a full learning post — problem statement, approach, code, complexity analysis, and a step-through visualizer.
 
 ## Features
 
 - **Phase-grouped navigation** — algorithms organized by learning phase (Two Pointers, Sliding Window, etc.)
-- **Step-by-step visualizers** — interactive SVG animations for each algorithm
+- **Step-by-step visualizers** — animated array cells with pointer labels, step log, and auto-play
+- **Live input** — edit the array (and target where applicable) and the visualizer resets automatically
 - **Dark / light mode** — via `next-themes`
 - **Global error handling** — custom 404 and 500 error pages
 
@@ -13,9 +14,10 @@ An interactive DSA (Data Structures & Algorithms) visualization app built with N
 
 | Layer | Choice |
 |-------|--------|
-| Framework | Next.js 16 (App Router) |
+| Framework | Next.js (App Router) |
 | UI primitives | Base UI (`@base-ui/react`) |
 | Component library | shadcn/ui |
+| Animation | Framer Motion |
 | Styling | Tailwind CSS v4 |
 | Icons | Lucide React |
 | Language | TypeScript |
@@ -30,50 +32,85 @@ visual-learning/
 │   ├── globals.css             # Global styles and CSS custom properties
 │   ├── not-found.tsx           # Global 404 page
 │   ├── error.tsx               # Global runtime error page
-│   └── (main)/                 # Route group (no URL segment)
+│   └── (main)/
 │       ├── page.tsx            # Home — DSA topic picker
 │       └── dsa/
 │           ├── page.tsx        # DSA index — Array / String cards
 │           ├── array/
-│           │   └── page.tsx    # Array index — phase-grouped algorithm cards
+│           │   ├── page.tsx                          # Array index — phase-grouped cards
+│           │   ├── two-sum-ii/page.tsx
+│           │   ├── valid-palindrome/page.tsx
+│           │   ├── move-zeroes/page.tsx
+│           │   ├── remove-duplicates/page.tsx
+│           │   └── squares-of-sorted-array/page.tsx
 │           └── string/
 │               └── page.tsx    # String index (stub)
 │
 ├── components/
 │   ├── navigation/
-│   │   └── mainNav.component.tsx   # Top navigation bar
+│   │   └── mainNav.component.tsx
 │   ├── array/
-│   │   └── array-data.ts           # Single source of truth for all array algorithm data
+│   │   ├── array-data.ts               # Nav registry — all algorithm metadata
+│   │   ├── twoSum.component.tsx
+│   │   ├── validPalindrome.component.tsx
+│   │   ├── moveZeroes.component.tsx
+│   │   ├── removeDuplicates.component.tsx
+│   │   └── sortedSquares.component.tsx
 │   └── ui/
-│       ├── card-link.tsx           # Reusable navigation card
-│       ├── page-header.tsx         # Reusable page title + subtitle block
-│       ├── page-layout.tsx         # Reusable page wrapper with max-width and padding
-│       ├── navigation-menu.tsx     # Base UI navigation menu primitives
-│       ├── button.tsx              # Button primitive
-│       ├── separator.tsx           # Separator line
-│       └── ...                     # Other shadcn/ui primitives
+│       ├── button.tsx
+│       ├── input.tsx
+│       ├── separator.tsx
+│       ├── card-link.tsx
+│       ├── page-header.tsx
+│       ├── page-layout.tsx
+│       └── ...                         # Other shadcn/ui primitives
 │
 ├── hooks/                      # Custom React hooks
 ├── lib/                        # Shared utilities (cn, etc.)
-├── public/                     # Static assets
+├── CLAUDE.md                   # Recipe book for adding new visualizer pages
 ├── package.json
 └── tsconfig.json
 ```
 
+## Implemented Algorithms
+
+| # | Algorithm | Pattern | Route |
+|---|-----------|---------|-------|
+| Q1 | Two Sum II | Opposite-direction pointers | `/dsa/array/two-sum-ii` |
+| Q2 | Valid Palindrome | Opposite-direction pointers | `/dsa/array/valid-palindrome` |
+| Q6 | Move Zeroes | Slow / fast same-direction | `/dsa/array/move-zeroes` |
+| Q7 | Remove Duplicates | Slow / fast same-direction | `/dsa/array/remove-duplicates` |
+| Q8 | Squares of Sorted Array | Opposite-direction, fill back-to-front | `/dsa/array/squares-of-sorted-array` |
+
 ## Page Hierarchy
 
 ```
-/               Home            DSA topic picker card
-└── /dsa        DSA             Array + String cards
-    ├── /dsa/array   Array      Phase-grouped algorithm cards
-    └── /dsa/string  String     (coming soon)
+/                         Home
+└── /dsa                  DSA index
+    ├── /dsa/array        Array index (phase-grouped cards)
+    │   ├── /two-sum-ii
+    │   ├── /valid-palindrome
+    │   ├── /move-zeroes
+    │   ├── /remove-duplicates
+    │   └── /squares-of-sorted-array
+    └── /dsa/string       String index (coming soon)
 ```
+
+## Each Algorithm Page
+
+Every implemented page follows the same structure:
+
+1. **Header** — title, subtitle, tags (pattern, time, space, difficulty)
+2. **Problem statement** — description, input/output examples, constraints
+3. **Approach** — numbered steps with prose explanation
+4. **Implementation** — code in a terminal-style block
+5. **Complexity** — 4-card grid (Time / Space / Best / Worst)
+6. **Interactive visualizer** — step-through with auto-play and live input
+7. **How to read the visualizer** — pointer legend and key insight callout
 
 ## Algorithm Data
 
 All array algorithm metadata lives in [components/array/array-data.ts](components/array/array-data.ts).
-
-It exports:
 
 | Export | Description |
 |--------|-------------|
@@ -81,13 +118,13 @@ It exports:
 | `ALL_ITEMS` | Flat list of every algorithm (in order) |
 | `globalNum(href)` | Returns the 1-based sequential number for an algorithm |
 
-### Current Phases
+### Phases
 
-1. **Two Pointers** — Opposite ends, same direction, fast & slow
-2. **Sliding Window** — Fixed size, variable size, multi-window
-3. **Prefix Sum + Counting** — Prefix sums, frequency maps, difference arrays
-4. **Matrix / 2D Array** — Traversal, spiral, in-place rotation, diagonals
-5. **Advanced Manipulation** — Sorting tricks, next permutation, partition
+1. **Two Pointers** — Fundamentals (opposite-direction + slow/fast) and Advanced
+2. **Sliding Window** — Fixed and variable window
+3. **Prefix Sum + Counting** — Basic prefix, prefix + HashMap, optimization variants
+4. **Matrix / 2D Array** — Traversal and logic-heavy
+5. **Advanced Manipulation** — Core interview and harder manipulation
 
 ## Reusable UI Components
 
@@ -120,13 +157,17 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Adding a New Algorithm Page
 
-1. Add the entry to `PHASES` in [components/array/array-data.ts](components/array/array-data.ts)
-2. Create the page at `app/(main)/dsa/array/<slug>/page.tsx`
-3. Build the visualizer component in `components/array/`
-4. The card will appear automatically on the array index page
+See [CLAUDE.md](CLAUDE.md) for the full recipe with copy-paste templates.
+
+Quick steps:
+
+1. Check `components/array/array-data.ts` — the entry likely already exists
+2. Create `components/array/<camelCase>.component.tsx` (visualizer)
+3. Create `app/(main)/dsa/array/<slug>/page.tsx` (learning post)
+4. The card appears automatically on the array index page
 
 ## Adding a New Topic (e.g. String)
 
-1. Create `app/(main)/dsa/string/page.tsx` with a `PageLayout` + `PageHeader` + cards
+1. Create `app/(main)/dsa/string/page.tsx` with `PageLayout` + `PageHeader` + cards
 2. Create `components/string/string-data.ts` following the same shape as `array-data.ts`
 3. Add the route to the `DSA_TOPICS` navigation list in `mainNav.component.tsx`

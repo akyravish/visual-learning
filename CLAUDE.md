@@ -654,8 +654,19 @@ const LOG_COLOR = {
 
 ## Existing Implementations (reference)
 
-| Algorithm        | Pointer type                                | Component                                        | Page                                             |
-| ---------------- | ------------------------------------------- | ------------------------------------------------ | ------------------------------------------------ |
-| Two Sum II       | Opposite direction (`left`, `right`)        | `components/array/twoSum.component.tsx`          | `app/(main)/dsa/array/two-sum-ii/page.tsx`       |
-| Valid Palindrome | Opposite direction (`left`, `right`)        | `components/array/validPalindrome.component.tsx` | `app/(main)/dsa/array/valid-palindrome/page.tsx` |
-| Move Zeroes      | Slow/fast same-dir (`insertPos`, `fastIdx`) | `components/array/moveZeroes.component.tsx`      | `app/(main)/dsa/array/move-zeroes/page.tsx`      |
+| Algorithm              | Pointer type                                         | Component                                            | Page                                                       |
+| ---------------------- | ---------------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------- |
+| Two Sum II             | Opposite direction (`left`, `right`)                 | `components/array/twoSum.component.tsx`              | `app/(main)/dsa/array/two-sum-ii/page.tsx`                 |
+| Valid Palindrome       | Opposite direction (`left`, `right`)                 | `components/array/validPalindrome.component.tsx`     | `app/(main)/dsa/array/valid-palindrome/page.tsx`           |
+| Move Zeroes            | Slow/fast same-dir (`insertPos`, `fastIdx`)          | `components/array/moveZeroes.component.tsx`          | `app/(main)/dsa/array/move-zeroes/page.tsx`                |
+| Remove Duplicates      | Slow/fast same-dir (`insertPos`, `fastIdx`)          | `components/array/removeDuplicates.component.tsx`    | `app/(main)/dsa/array/remove-duplicates/page.tsx`          |
+| Squares of Sorted Array | Opposite dir + fill back-to-front (`left`, `right`, `pos`) | `components/array/sortedSquares.component.tsx` | `app/(main)/dsa/array/squares-of-sorted-array/page.tsx` |
+
+### Two-row layout (Squares pattern)
+
+When the algorithm writes into a **separate result array** (not in-place), use two sub-components instead of one `Cell`:
+
+- **`InputCell`** — renders the original input row with `L` / `R` / `L=R` pointer labels; consumed cells (`i < left || i > right`) go gray.
+- **`ResultCell`** — renders the result row; `null` slots show a dashed placeholder with `?`; filled slots are green. A `pos` label floats above the current write position.
+
+The `AlgoState` carries `result: (number | null)[]` (same length as `nums`, initialised with `null`) alongside the standard pointer fields. The `justPlaced` field (index into `result[]`) drives the scale pop animation on the result cell, same as `justMoved` in single-row visualizers.
